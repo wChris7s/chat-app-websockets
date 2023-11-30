@@ -1,0 +1,39 @@
+<div class="card mx-4 my-4">
+    <div class="card-header">
+        <ul class="nav nav-pills">
+            <li *ngIf="!conectado" class="nav-item me-2">
+                <input [(ngModel)]="mensaje.username" type="text" class="form-control" placeholder="Username" name="username">
+            </li>
+            <li *ngIf="!conectado" class="nav-item me-2">
+                <button [disabled]="!mensaje.username" class="btn btn-success" type="button" (click)="conectar()">Conectar</button>
+            </li>
+            <li *ngIf="conectado" class="nav-item">
+                <button class="btn btn-warning" type="button" (click)="desconectar()">Cerrar Chat</button>
+            </li>
+        </ul>
+    </div>
+
+    <div #scrollChat [scrollTop]="scrollChat.scrollHeight" class="card-body" style="overflow-y: scroll; height: 360px;" *ngIf="conectado">
+        <ul class="list-group-flush">
+            <li *ngFor="let mensaje of mensajes" class="list-group-item list-group-item-light">
+                <span *ngIf="mensaje.tipo == 'NEW_USER'" >
+                    {{mensaje.fecha | date:'shortTime'}} @ {{mensaje.texto}} : <span [ngStyle]="{'color': mensaje.color}">{{mensaje.username}}</span>
+                </span>
+                <span *ngIf="mensaje.tipo == 'MESSAGE'">
+                    {{mensaje.fecha | date:'shortTime'}} 
+                    <span [ngStyle]="{'color': mensaje.color}">{{mensaje.username}}</span> dice : <br> {{mensaje.texto}}
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card-footer" *ngIf="conectado">
+        <div class="row row-cols-sm-auto g-4">
+            <div class="form-group" mx-3>
+                <input [(ngModel)]="mensaje.texto" type="text" class="form-control" placeholder="Escribe un mensaje ..." name="texto" (keyup)="writing()">
+            </div>
+            <button (click)="sendMessage()" class="btn btn-primary" type="submit">Enviar</button>
+        </div>
+        <div>{{escribiendo}}</div>
+    </div>
+</div>
